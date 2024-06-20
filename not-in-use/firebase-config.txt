@@ -1,0 +1,26 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "@firebase/firestore"
+import { getAuth } from "firebase/auth";
+
+// const { initializeApp } = require('firebase/app');
+// const { getFirestore } = require('firebase/firestore');
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCBa3CXTLWO-CylB6y4plqdDbfdqL4WS20",
+    authDomain: "optimo-sab9vf.firebaseapp.com",
+    projectId: "optimo-sab9vf",
+    storageBucket: "optimo-sab9vf.appspot.com",
+    messagingSenderId: "518663741461",
+    appId: "1:518663741461:web:9812690c7def1305d9ee1c"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Authentication and get a reference to the service
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+
+
+

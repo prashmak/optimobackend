@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom Pagination Styles */
+/* Custom Pagination Styles */
+.pagination {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+
+
+.pagination-br{
+  background-color: #4caf50;
+width: 100%;
+text-align: center;
+color: aqua;
+
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 2px 16px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s;
+}
+
+.pagination a :active {
+  color: black;
+  float: left;
+  padding: 2px 16px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  background-color: #4caf50;
+  transition: background-color 0.3s;
+}
+
+.prev{
+  color: black;
+  font-size: 15px;
+  font-weight: 500;
+  float: left;
+  padding: 2px 8px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.next{
+  color: black;
+  font-size: 15px;
+  font-weight: 500;
+  float: right;
+  padding: 2px 8px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.number-link{
+  color: black;
+  font-size: 15px;
+  font-weight: 500;
+  float: right;
+  padding: 2px 18px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.number-link-active{
+  color: black;
+  font-size: 15px;
+  font-weight: 500;
+  float: right;
+  text-decoration: none;
+  border: 1px solid #004cff;
+
+
+}
+
+.pagination a.number-link-active {
+  background-color: #4caf50;
+  color: white;
+  border: 1px solid #4caf50;
+}
+
+.number-link a:hover:not(.number-link-active) {background-color: #bbff00;}
+
+/* Centering the Pagination Component */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 21px;
+}
