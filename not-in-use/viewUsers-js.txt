@@ -1,0 +1,205 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase-config";
+import Navbar from './Navbar'
+import Footer from './Footer'
+import { Link } from "react-router-dom";
+
+const ViewUser = () => {
+  const { id } = useParams();
+  const [userData, setUserData] = useState(null);
+  const [assetsData, setAssetsData] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userDoc = await getDoc(doc(db, "Users", id));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUserData(userData);
+          const assetsCollectionRef = collection(db, "Users", id, "Assets");
+          const assetsSnapshot = await getDocs(assetsCollectionRef);
+          const assetsData = assetsSnapshot.docs.map((doc) => doc.data());
+          setAssetsData(assetsData);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [id]);
+
+  if (!userData || !assetsData) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className='flex flex-col min-h-screen items-center bg-slate-100'>
+      
+      <Navbar />
+      <main className="flex-1 text-2xl pt-10 items-center">
+        <div className='bg-white p-8 rounded-xl w-[1300px]'>
+          <div class=" bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto mt-10 md:mt-0 ">
+            
+            <div class="w-full container px-5 mx-auto">
+              <div class="text-center mb-6">
+                <h1 class="sm:text-3xl text-sm font-medium text-center title-font text-gray-900 mb-4">{userData.display_name}</h1>
+                <p class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto"> Complete Details</p>
+              </div>
+              
+              <div class="flex flex-wrap sm:mx-auto sm:mb-2 -mx-2">
+                {/* Comment */}
+                <div className="h11 w-full my-4 font-medium text-center text-sm p-2 uppercase text-gray-900 bg-gray-200">Personal Information</div>
+                {/* sdf */}
+                <div class="p-2 sm:w-1/2 w-full">
+                  <div class="bg-white rounded flex p-2 h-full items-center">
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-blue-500 w-5 h-5 flex-shrink-0 mt-1 mr-2" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                      <path d="M22 4L12 14.01l-3-3"></path>
+                    </svg>
+                    <span class="title-font text-xl text-blue-400 font-medium pr-1">User ID:</span>
+                    <span class="title-font text-xl font-medium">{userData.user_id}</span>
+                  </div>
+                </div>
+                <div class="p-2 sm:w-1/2 w-full">
+                  <div class="bg-white rounded flex p-2 h-full items-center">
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-blue-500 w-5 h-5 flex-shrink-0 mt-1 mr-2" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                      <path d="M22 4L12 14.01l-3-3"></path>
+                    </svg>
+                    <span class="title-font text-xl text-blue-400 font-medium pr-1">Age:</span>
+                    <span class="title-font text-xl font-medium">{userData.user_age}</span>
+                  </div>
+                </div>
+                <div class="p-2 sm:w-1/2 w-full">
+                  <div class="bg-white rounded flex p-2 h-full items-center">
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-blue-500 w-5 h-5 flex-shrink-0 mt-1 mr-2" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                      <path d="M22 4L12 14.01l-3-3"></path>
+                    </svg>
+                    <span class="title-font text-xl text-blue-400 font-medium pr-1">Phone Number:</span>
+                    <span class="title-font text-xl font-medium ">{userData.phone_number}</span>
+                  </div>
+                </div>
+                <div class="p-2 sm:w-1/2 w-full">
+                  <div class="bg-white rounded flex p-2 h-full items-center">
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-blue-500 w-5 h-5 flex-shrink-0 mt-1 mr-2" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                      <path d="M22 4L12 14.01l-3-3"></path>
+                    </svg>
+                    <span class="title-font text-xl font-medium  text-blue-400  pr-1">Date of Birth:</span>
+                    <span class="title-font text-xl font-medium"> {userData.date_of_birth ? new Date(userData.date_of_birth.seconds * 1000).toLocaleDateString() : 'N/A'}</span>
+                  </div>
+                </div>
+                <div class="p-2 sm:w-1/2 w-full">
+                  <div class="bg-white rounded flex p-2 h-full items-center">
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-blue-500 w-5 h-5 flex-shrink-0 mt-1 mr-2" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                      <path d="M22 4L12 14.01l-3-3"></path>
+                    </svg>
+                    <span class="title-font text-xl font-medium  text-blue-400  pr-1">Created:</span>
+                    <span class="title-font text-xl font-medium">{userData.created_time ? new Date(userData.created_time.seconds * 1000).toLocaleString() : 'N/A'}</span>
+                  </div>
+                </div>
+                <div class="p-2 sm:w-1/2 w-full">
+                  <div class="bg-white rounded flex p-2 h-full items-center">
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-blue-500 w-5 h-5 flex-shrink-0 mt-1 mr-2" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                      <path d="M22 4L12 14.01l-3-3"></path>
+                    </svg>
+                    <span class="title-font text-xl font-medium  text-blue-400  pr-1">Device Location:</span>
+                    <span class="title-font text-xl font-medium">{userData.device_location ? `${userData.device_location.latitude}, ${userData.device_location.longitude}` : 'N/A'}</span>
+                  </div>
+                </div>
+                {/* Questions */}
+                <div className="h1 w-full my-4 font-medium text-center text-sm p-2 uppercase text-gray-900 bg-gray-200">Assets</div>
+              </div>
+              {/* Questions Details */}
+              <div class="flex flex-wrap sm:mx-auto sm:mb-2 -mx-2">
+                {/* Render all fields from assetsData */}
+                {assetsData.map((asset, index) => (
+                  <div key={index} className="p-2 sm:w-1/2 w-full">
+                    <div className="bg-white rounded flex p-2 h-full items-center">
+                      {/* Render each field dynamically */}
+                      <ul>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">fd1:</span>
+                          <span className="title-font text-xl font-medium">{asset.fd1}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">fd2:</span>
+                          <span className="title-font text-xl font-medium">{asset.fd2}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">gd1:</span>
+                          <span className="title-font text-xl font-medium">{asset.gd1}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">gd2:</span>
+                          <span className="title-font text-xl font-medium">{asset.gd2}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">gd3:</span>
+                          <span className="title-font text-xl font-medium">{asset.gd3}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">mf1:</span>
+                          <span className="title-font text-xl font-medium">{asset.mf1}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">mf2:</span>
+                          <span className="title-font text-xl font-medium">{asset.mf2}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">mf3:</span>
+                          <span className="title-font text-xl font-medium">{asset.mf3}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">mf4:</span>
+                          <span className="title-font text-xl font-medium">{asset.mf4}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">re:</span>
+                          <span className="title-font text-xl font-medium">{asset.re}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">re1:</span>
+                          <span className="title-font text-xl font-medium">{asset.re1}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">re2:</span>
+                          <span className="title-font text-xl font-medium">{asset.re2}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">st:</span>
+                          <span className="title-font text-xl font-medium">{asset.st}</span>
+                        </li>
+                        <li>
+                          <span className="title-font text-xl text-blue-400 font-medium pr-1">ve:</span>
+                          <span className="title-font text-xl font-medium">{asset.ve}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                ))}
+              </div>
+              {/* Back Button */}
+              <div className="w-50 w-full mt-20 text-center"><Link to={`/Users`} className="text-white bg-blue-600 border-0 py-2 px-8 focus:outline-none hover:bg-blue-400 rounded text-lg ">Back</Link></div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+      <div className=" w-full text-center bg-slate-200 py-4">
+        <Footer />
+      </div>
+    </div>
+  );
+};
+
+export default ViewUser;

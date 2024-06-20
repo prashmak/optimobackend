@@ -1,0 +1,95 @@
+import React, { useState, useEffect } from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { db } from '../firebase-config';
+
+const Users = () => {
+  const navigate = useNavigate();
+  const [Users, setUsers] = useState([]);
+
+  const getUsers = async () => {
+    const usersCollectionRef = collection(db, 'Users');
+    const data = await getDocs(usersCollectionRef);
+    const usersData = [];
+    for (const userDoc of data.docs) {
+      const userData = userDoc.data();
+      const userId = userDoc.id;
+      const assetsCollectionRef = collection(db, 'Users', userId, 'Assets');
+      const assetsSnapshot = await getDocs(assetsCollectionRef);
+      const assetsData = assetsSnapshot.docs.map((assetDoc) => assetDoc.data());
+      usersData.push({ ...userData, id: userId, assets: assetsData });
+    }
+    setUsers(usersData);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const updateUser = async (id, pin_number) => {
+    const userDoc = doc(db, 'Users', id);
+    const newFields = { pin_number: pin_number + 1 };
+    await updateDoc(userDoc, newFields);
+    getUsers();
+  };
+
+  const deleteUser = async (id) => {
+    const userDoc = doc(db, 'Users', id);
+    await deleteDoc(userDoc);
+    getUsers();
+  };
+
+  return (
+    <div className='flex flex-col min-h-screen items-center bg-slate-100'>
+      <Navbar />
+      <main className='flex-1 text-4xl pt-10 items-center'>
+        <div className='bg-white p-8 rounded-xl w-[1000px]'>
+          <table className='table table-hover text-lg w-full font-normal'>
+            <thead className=' bg-slate-200 h-10'>
+              <tr className='border-b-1 border-gray-600 text-base font-normal'>
+                <th scope='col'>#</th>
+                <th scope='col'>Name</th>
+                <th scope='col'>Pin Number</th>
+                <th scope='col'>Action</th>
+                <th scope='col'>Action</th>
+                <th scope='col'>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Users.map((User) => (
+                <tr key={User.id} className='text-center bg-white odd:bg-gray-100'>
+                  <th scope='row'>{User.user_id}</th>
+                  <td className='text-left p-2'>{User.display_name}</td>
+                  <td>{User.pin_number} </td>
+                  <td>
+                    <Link to={`/viewUser/${User.id}`} className='bg-green-600 hover:bg-green-500 text-white text-sm p-1 m-1 rounded text-center'>
+                      View User
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`/editUser/${User.id}`} className='bg-blue-500 hover:bg-blue-600 text-white text-sm p-1 m-1 rounded text-center'>
+                      Edit User
+                    </Link>
+                  </td>
+                  <td>
+                    <button className='bg-red-500 hover:bg-red-600 text-white text-sm p-1 m-1 rounded text-center' onClick={() => deleteUser(User.id)}>
+                      Delete User
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </main>
+      <div className=' w-full text-center bg-slate-200 py-4'>
+        <Footer />
+      </div>
+    </div>
+  );
+};
+
+export default Users;
